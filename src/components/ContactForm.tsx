@@ -4,187 +4,194 @@
  */
 
 import React, { useState } from "react";
-import { Mail, Linkedin, Send, CheckCircle2, AlertCircle } from "lucide-react";
-import { submitMessage } from "../portfolioService";
+import { Mail, Linkedin, Phone, MapPin, Copy, Check, ExternalLink } from "lucide-react";
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
-  const [errorText, setErrorText] = useState("");
+  const [copiedText, setCopiedText] = useState<string | null>(null);
 
-  const validateEmail = (email: string) => {
-    return /^[^@]+@[^@]+\.[^@]+$/.test(email);
+  const handleCopy = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedText(label);
+    setTimeout(() => setCopiedText(null), 2000);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setSubmitStatus("error");
-      setErrorText("Please fill out all fields.");
-      return;
-    }
-    if (!validateEmail(formData.email)) {
-      setSubmitStatus("error");
-      setErrorText("Please enter a valid email address.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitStatus("idle");
-    setErrorText("");
-
-    try {
-      await submitMessage(formData);
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", message: "" });
-    } catch (err) {
-      console.error("Failed to submit client message:", err);
-      setSubmitStatus("error");
-      setErrorText("Could not deliver your message. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const contactDetails = {
+    phone: "+63 976 2182441",
+    email: "buenafejazerjun@gmail.com",
+    linkedin: "https://linkedin.com/in/jazerjun-buenafe/",
+    linkedinLabel: "linkedin.com/in/jazerjun-buenafe/",
+    location: "Metro Manila, Philippines"
   };
 
   return (
     <section id="contact" className="py-24 relative overflow-hidden bg-[#080808] border-t border-white/10">
-      
-      {/* Dynamic Ambient Background Glow */}
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/[0.01] rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-80 h-80 bg-white/[0.01] rounded-full blur-3xl pointer-events-none" />
+      {/* Cinematic Ambient Background Ellipses */}
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-white/[0.01] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-12 left-1/4 w-[400px] h-[400px] bg-white/[0.01] rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="space-y-16">
           
-          {/* Column 1: Editorial text details & details info */}
-          <div className="lg:col-span-5 space-y-8">
-            <div className="space-y-4">
-              <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40 block border-l-2 border-white/20 pl-3">
-                Inquire
-              </span>
-              <h2 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tighter uppercase leading-none">
-                Let's Craft Something <br />
-                <span className="text-white/60">
-                  Exceptional
-                </span>
-              </h2>
-            </div>
-
-            <p className="text-white/45 text-sm leading-relaxed font-light">
-              Seeking dynamic ad automation scaling, bespoke cinematography workflows, motion assets, or full campaign strategizing? Fill out the portal. I typically respond within 24 business hours.
+          {/* Header Introduction Block */}
+          <div className="text-center space-y-4">
+            <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#D4AF37] inline-block border-b border-[#D4AF37]/30 pb-1.5">
+              Available for Collaboration
+            </span>
+            <h2 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tighter uppercase leading-none block">
+              Get In Touch
+            </h2>
+            <p className="text-white/40 text-sm font-light max-w-xl mx-auto leading-relaxed">
+              Let's craft something exceptional. Reach out directly through any of the channels below to discuss motion design, creative direction, or ad automation projects.
             </p>
+          </div>
 
-            <div className="space-y-4 pt-6 border-t border-white/5">
-              <h4 className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">
-                Direct Channels
-              </h4>
+          {/* Elegant About & Contact details grid */}
+          <div className="bg-[#0b0b0b] border border-white/5 rounded-3xl p-8 md:p-12 relative shadow-2xl backdrop-blur-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-stretch">
               
-              <div className="space-y-3">
-                <a 
-                  href="mailto:buenafejazerjun@gmail.com"
-                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors py-1 group pointer-events-auto"
-                >
-                  <div className="p-2.5 bg-white/[0.02] rounded-xl border border-white/5 shrink-0 group-hover:border-white/20">
-                    <Mail className="w-4 h-4 text-white/80" />
-                  </div>
-                  <span className="text-sm font-light">buenafejazerjun@gmail.com</span>
-                </a>
+              {/* Left Wing: Professional Summary / Pitch */}
+              <div className="space-y-6 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-white/50">
+                    About Jazerjun
+                  </h4>
+                  <p className="text-white/60 text-sm font-light leading-relaxed">
+                    I am a highly focused multimedia artist, motion designer, and ad-tech developer crafting pixel-perfect dynamic creative optimization (DCO) frameworks and high-impact cinematic assets. Let's optimize your messaging, automate your scaling pipelines, or build highly immersive brand identities.
+                  </p>
+                </div>
 
-                <a 
-                  href="https://linkedin.com/in/jazerjun-buenafe/"
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors py-1 group pointer-events-auto"
-                >
-                  <div className="p-2.5 bg-white/[0.02] rounded-xl border border-white/5 shrink-0 group-hover:border-white/20">
-                    <Linkedin className="w-4 h-4 text-white/80" />
+                <div className="pt-6 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-white/30">
+                  <span>METRO MANILA, PH</span>
+                  <span>UTC +8:00</span>
+                </div>
+              </div>
+
+              {/* Right Wing: Interactive detail rows */}
+              <div className="space-y-4 flex flex-col justify-center">
+                
+                {/* Email Channel Block */}
+                <div className="group relative bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 rounded-2xl p-4 transition-all duration-300 pointer-events-auto">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl text-white/70">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-mono text-white/40 uppercase block">Email Address</span>
+                        <a 
+                          href={`mailto:${contactDetails.email}`}
+                          className="text-sm font-light text-white hover:text-[#D4AF37] transition-colors block"
+                        >
+                          {contactDetails.email}
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => handleCopy(contactDetails.email, "email")}
+                      className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all cursor-pointer pointer-events-auto"
+                      title="Copy Email Address"
+                    >
+                      {copiedText === "email" ? (
+                        <Check className="w-4 h-4 text-emerald-400" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
                   </div>
-                  <span className="text-sm font-light">linkedin.com/in/jazerjun-buenafe/</span>
-                </a>
+                </div>
+
+                {/* Telephone Channel Block */}
+                <div className="group relative bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 rounded-2xl p-4 transition-all duration-300 pointer-events-auto">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl text-white/70">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-mono text-white/40 uppercase block">Phone Number</span>
+                        <a 
+                          href={`tel:${contactDetails.phone.replace(/\s+/g, "")}`}
+                          className="text-sm font-light text-white hover:text-[#D4AF37] transition-colors block"
+                        >
+                          {contactDetails.phone}
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => handleCopy(contactDetails.phone, "phone")}
+                      className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all cursor-pointer pointer-events-auto"
+                      title="Copy Phone Number"
+                    >
+                      {copiedText === "phone" ? (
+                        <Check className="w-4 h-4 text-emerald-400" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* LinkedIn Channel Block */}
+                <div className="group relative bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 rounded-2xl p-4 transition-all duration-300 pointer-events-auto">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl text-white/70">
+                        <Linkedin className="w-4 h-4" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-mono text-white/40 uppercase block">LinkedIn Profile</span>
+                        <a 
+                          href={contactDetails.linkedin}
+                          target="_blank" 
+                          rel="noreferrer"
+                          className="text-sm font-light text-white hover:text-[#D4AF37] transition-colors block"
+                        >
+                          {contactDetails.linkedinLabel}
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <a
+                      href={contactDetails.linkedin}
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all cursor-pointer pointer-events-auto"
+                      title="Open LinkedIn Link"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Location Channel Block */}
+                <div className="group relative bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 rounded-2xl p-4 transition-all duration-300 pointer-events-auto">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl text-white/70">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-mono text-white/40 uppercase block">Location</span>
+                        <span className="text-sm font-light text-white block">
+                          {contactDetails.location}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
 
-          {/* Column 2: Minimalist Contact inputs portal */}
-          <div className="lg:col-span-7 bg-[#0b0b0b] border border-white/5 rounded-3xl p-8 md:p-10 relative">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/40 block">
-                    Full Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="E.g. David Harrison"
-                    className="w-full bg-black border border-white/10 focus:border-white/30 focus:outline-none rounded-xl px-4 py-3 text-white text-sm transition-colors cursor-text pointer-events-auto"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/40 block">
-                    Your Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="david@company.com"
-                    className="w-full bg-black border border-white/10 focus:border-white/30 focus:outline-none rounded-xl px-4 py-3 text-white text-sm transition-colors cursor-text pointer-events-auto"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/40 block">
-                  Project Inquiry details
-                </label>
-                <textarea
-                  id="message"
-                  required
-                  rows={5}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Tell me about your dynamic campaign goals, timelines, or videography scope."
-                  className="w-full bg-black border border-white/10 focus:border-white/30 focus:outline-none rounded-xl px-4 py-3 text-white text-sm transition-colors resize-none cursor-text pointer-events-auto"
-                />
-              </div>
-
-              {/* Status Feedbacks banner */}
-              {submitStatus === "success" && (
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center gap-3 text-sm animate-fade-in">
-                  <CheckCircle2 className="w-5 h-5 shrink-0" />
-                  <span className="font-light">Success! Your inquiry has been submitted securely. Let's speak soon.</span>
-                </div>
-              )}
-
-              {submitStatus === "error" && (
-                <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl flex items-center gap-3 text-sm">
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span className="font-light">{errorText}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full bg-white hover:bg-neutral-200 text-black font-semibold uppercase tracking-wider py-4 px-6 rounded-full flex items-center justify-center gap-2 transition-all cursor-pointer pointer-events-auto ${
-                  isSubmitting ? "opacity-50 cursor-not-allowed" : "shadow-md hover:shadow-lg"
-                }`}
-              >
-                <span className="text-xs font-mono tracking-wider">{isSubmitting ? "Submitting..." : "Send Inquiry"}</span>
-                <Send className="w-4 h-4 ml-1" />
-              </button>
-
-            </form>
-          </div>
+          {/* Copying tooltip notification block */}
+          {copiedText && (
+            <div className="fixed bottom-6 right-6 z-50 px-4 py-2 bg-[#D4AF37] text-black text-xs font-mono font-bold rounded-lg shadow-lg uppercase tracking-wider animate-bounce">
+              Copied {copiedText === "email" ? "Email Address" : "Phone Number"}!
+            </div>
+          )}
 
         </div>
       </div>
