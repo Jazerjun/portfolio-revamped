@@ -1,0 +1,6 @@
+{
+  "name": "Jazerjun Buenafe Portfolio",
+  "description": "Premium cinematic portfolio website for Jazerjun Buenafe, a multimedia artist and motion designer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

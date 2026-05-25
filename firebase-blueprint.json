@@ -1,0 +1,111 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "A multimedia portfolio project containing titles, descriptions, categories, thumbnails, tags, and optional video URLs.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique project identifier."
+        },
+        "title": {
+          "type": "string",
+          "description": "The name or title of the project."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short summary of the project."
+        },
+        "details": {
+          "type": "string",
+          "description": "A detailed narrative of the project context and creative output."
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of project (motion, video, design, ad)."
+        },
+        "thumbnailUrl": {
+          "type": "string",
+          "description": "URL to thumbnail image or poster image of the work."
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "Optional video URL (YouTube, Vimeo, dynamic embed)."
+        },
+        "tags": {
+          "type": "array",
+          "description": "A list of tools and technologies used."
+        },
+        "isFeatured": {
+          "type": "boolean",
+          "description": "Whether the project is featured on the hero splash or front page."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["id", "title", "description", "category", "thumbnailUrl", "tags"]
+    },
+    "Video": {
+      "title": "Video",
+      "description": "A separate multimedia video asset or reel item for dynamic gallery loading.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "title", "url"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Feedback or endorsement from dynamic clients/partners.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientName": { "type": "string" },
+        "company": { "type": "string" },
+        "role": { "type": "string" },
+        "feedback": { "type": "string" },
+        "avatarUrl": { "type": "string" }
+      },
+      "required": ["id", "clientName", "feedback"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Contact form submissions from external visitors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "message"]
+    }
+  },
+  "firestore": {
+    "projects": {
+      "schema": "Project",
+      "description": "The collection of multimedia works and projects."
+    },
+    "videos": {
+      "schema": "Video",
+      "description": "The collection of standalone video uploads or embedded links."
+    },
+    "testimonials": {
+      "schema": "Testimonial",
+      "description": "Client feedback and industry testimonials."
+    },
+    "messages": {
+      "schema": "Message",
+      "description": "Contact form messages."
+    }
+  }
+}

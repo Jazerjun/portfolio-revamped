@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Global validation helpers (Phase 3 primitives)
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isBootstrappedAdmin() {
+      return request.auth.token.email == "buenafejazerjun@gmail.com" && request.auth.token.email_verified == true;
+    }
+
+    function isDbAdmin() {
+      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (isBootstrappedAdmin() || isDbAdmin());
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Dynamic Schema Validators ---
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'title', 'description', 'category', 'thumbnailUrl', 'tags'])
+        && data.keys().size() <= 10
+        && data.id is string
+        && data.id.size() <= 128
+        && data.title is string
+        && data.title.size() <= 200
+        && data.description is string
+        && data.description.size() <= 2000
+        && data.category is string
+        && (data.category == "motion" || data.category == "video" || data.category == "design" || data.category == "ad")
+        && data.thumbnailUrl is string
+        && data.thumbnailUrl.size() <= 2048
+        && data.tags is list
+        && data.tags.size() <= 10
+        && (!data.keys().hasAny(['videoUrl']) || (data.videoUrl is string && data.videoUrl.size() <= 2048))
+        && (!data.keys().hasAny(['details']) || (data.details is string && data.details.size() <= 10000))
+        && (!data.keys().hasAny(['isFeatured']) || data.isFeatured is bool);
+    }
+
+    function isValidVideo(data) {
+      return data.keys().hasAll(['id', 'title', 'url'])
+        && data.keys().size() <= 6
+        && data.id is string
+        && data.id.size() <= 128
+        && data.title is string
+        && data.title.size() <= 200
+        && data.url is string
+        && data.url.size() <= 2048
+        && (!data.keys().hasAny(['category']) || (data.category is string && data.category.size() <= 64))
+        && (!data.keys().hasAny(['description']) || (data.description is string && data.description.size() <= 1000));
+    }
+
+    function isValidTestimonial(data) {
+      return data.keys().hasAll(['id', 'clientName', 'feedback'])
+        && data.keys().size() <= 6
+        && data.id is string
+        && data.id.size() <= 128
+        && data.clientName is string
+        && data.clientName.size() <= 200
+        && data.feedback is string
+        && data.feedback.size() <= 2000
+        && (!data.keys().hasAny(['company']) || (data.company is string && data.company.size() <= 128))
+        && (!data.keys().hasAny(['role']) || (data.role is string && data.role.size() <= 128))
+        && (!data.keys().hasAny(['avatarUrl']) || (data.avatarUrl is string && data.avatarUrl.size() <= 2048));
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['name', 'email', 'message'])
+        && data.keys().size() <= 5
+        && data.name is string
+        && data.name.size() > 0
+        && data.name.size() <= 128
+        && data.email is string
+        && data.email.size() > 0
+        && data.email.size() <= 128
+        && data.email.matches('^[^@]+@[^@]+\\.[^@]+$') // simple email regex
+        && data.message is string
+        && data.message.size() > 0
+        && data.message.size() <= 4000
+        && (!data.keys().hasAny(['createdAt']) || (data.createdAt is timestamp && data.createdAt == request.time));
+    }
+
+    // --- Match Rules ---
+
+    // 3. Projects collection
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(projectId) && isValidProject(incoming());
+      allow update: if isAdmin() && isValidId(projectId) && isValidProject(incoming());
+      allow delete: if isAdmin() && isValidId(projectId);
+    }
+
+    // 4. Standalone Videos collection
+    match /videos/{videoId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(videoId) && isValidVideo(incoming());
+      allow update: if isAdmin() && isValidId(videoId) && isValidVideo(incoming());
+      allow delete: if isAdmin() && isValidId(videoId);
+    }
+
+    // 5. Testimonials collection
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(testimonialId) && isValidTestimonial(incoming());
+      allow update: if isAdmin() && isValidId(testimonialId) && isValidTestimonial(incoming());
+      allow delete: if isAdmin() && isValidId(testimonialId);
+    }
+
+    // 6. Contact messages collection
+    match /messages/{messageId} {
+      // Direct access / get is admin-only. Standard users or hackers cannot retrieve files.
+      allow get: if isAdmin() && isValidId(messageId);
+      // Listing messages is strictly manager-only
+      allow list: if isAdmin();
+      // Public guest is allowed to submit a contact message
+      allow create: if isValidId(messageId) && isValidMessage(incoming());
+      // Messages are immutable after sending - no modifications allowed as visitor or admin (keeps integrity)
+      allow update: if false;
+      // Admins are allowed to dismiss / delete messages
+      allow delete: if isAdmin() && isValidId(messageId);
+    }
+
+    // 7. Admins collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Admins are only set/managed inside the Firebase console for complete cloud safety
+    }
+  }
+}
