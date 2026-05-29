@@ -241,13 +241,6 @@ export default function App() {
               {/* Copywriting blocks (Column 1 - 7 cols) */}
               <div className="lg:col-span-8 space-y-8 text-left">
                 
-                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-white/70 font-bold whitespace-nowrap">
-                    Now Scheduling For Autumn 2026/2027
-                  </span>
-                </div>
-
                 <div className="space-y-4">
                   <span className="text-[11px] uppercase tracking-[0.5em] text-white/40 block font-mono">
                     Senior Multimedia Portfolio

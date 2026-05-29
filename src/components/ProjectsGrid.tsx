@@ -48,7 +48,24 @@ function VideoThumbnail({ videoUrl, fallbackUrl, title, isHovered }: VideoThumbn
     videoUrl.toLowerCase().includes("firebasestorage.googleapis.com")
   );
 
+  const isStock = !fallbackUrl || fallbackUrl.includes("unsplash.com") || fallbackUrl.includes("images.unsplash.com");
+
   if (!isDirectVideo || hasError) {
+    if (isStock) {
+      return (
+        <div className="w-full h-full bg-gradient-to-br from-zinc-950 via-[#0d0d0d] to-[#040404] flex flex-col justify-between p-6 border border-white/5 relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-white/[0.01] blur-2xl pointer-events-none" />
+          <div className="flex justify-between items-start z-10 opacity-30">
+            <span className="text-[8px] font-mono tracking-widest">// ARCHIVE SOURCE</span>
+            <span className="text-[12px] font-mono tracking-normal font-black">JB</span>
+          </div>
+          <div className="space-y-1.5 z-10 text-left">
+            <span className="text-[8px] font-mono tracking-[0.2em] text-[#D4AF37] uppercase block">// PREMIUM MOTION FRAME</span>
+            <h4 className="text-sm font-sans font-extrabold text-white uppercase tracking-tight line-clamp-2 leading-none">{title}</h4>
+          </div>
+        </div>
+      );
+    }
     return (
       <img
         src={fallbackUrl}
@@ -78,17 +95,21 @@ function VideoThumbnail({ videoUrl, fallbackUrl, title, isHovered }: VideoThumbn
         }`}
       />
       
-      {/* If current video stream is not yet loaded, show the fallback image immediately */}
+      {/* If current video stream is not yet loaded, show the custom placeholder immediately */}
       {!videoLoaded && (
-        <div className="absolute inset-0 bg-black flex items-center justify-center">
-          <img
-            src={fallbackUrl}
-            alt={title}
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover opacity-60"
-          />
-          {/* A clean minimalist preloader spinner */}
-          <div className="absolute w-6 h-6 rounded-full border-2 border-white/15 border-t-white/80 animate-spin" />
+        <div className="absolute inset-0 bg-[#070707] flex flex-col justify-between p-6 overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            {/* A clean minimalist preloader spinner */}
+            <div className="w-6 h-6 rounded-full border border-white/10 border-t-[#D4AF37] animate-spin" />
+          </div>
+          <div className="flex justify-between items-start opacity-30">
+            <span className="text-[8px] font-mono tracking-widest">// INITIALIZING STREAM</span>
+            <span className="text-[10px] font-mono font-bold">JB</span>
+          </div>
+          <div className="space-y-1 text-left opacity-30">
+            <span className="text-[8px] font-mono tracking-[0.15em] text-[#D4AF37] uppercase block">// LAUNCHING CAMPAIGN</span>
+            <p className="text-xs font-sans font-bold text-white uppercase tracking-tight truncate max-w-[170px]">{title}</p>
+          </div>
         </div>
       )}
     </div>
